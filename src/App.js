@@ -1,9 +1,9 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
-import Router from "./router";
-import { AppContext, LoadingView } from "./components";
+import Router from './router';
+import { AppContext, LoadingView } from './components';
 
-import "./App.scss";
+import './App.scss';
 
 class App extends Component {
   constructor(props) {
@@ -29,7 +29,7 @@ class App extends Component {
   render() {
     return (
       <AppContext.Provider value={this.state}>
-        <div className="App">
+        <div className='App'>
           <Router />
         </div>
         <LoadingView />

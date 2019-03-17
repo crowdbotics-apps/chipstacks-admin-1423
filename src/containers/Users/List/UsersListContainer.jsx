@@ -1,28 +1,28 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 
-import { AppContext } from "components";
+import { AppContext } from 'components';
 // import { UsersController } from "controllers";
-import styles from "./UsersListContainer.module.scss";
+import styles from './UsersListContainer.module.scss';
 
 class UsersListContainer extends React.Component {
   constructor(props) {
     super(props);
 
     this.columns = [
-      "No",
-      "Organization",
-      "Status",
-      "Participants",
-      "Participant groups",
-      "Divisions / Locations",
-      "Active Campaigns",
-      "Actions"
+      'No',
+      'Organization',
+      'Status',
+      'Participants',
+      'Participant groups',
+      'Divisions / Locations',
+      'Active Campaigns',
+      'Actions'
     ];
 
     this.state = {
       data: [],
-      keyword: ""
+      keyword: ''
     };
   }
 
