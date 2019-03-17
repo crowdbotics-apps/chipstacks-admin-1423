@@ -3,6 +3,7 @@ import cn from 'classnames';
 import { Link, Switch, Route, Redirect } from 'react-router-dom';
 
 import UsersListContainer from '../containers/Users/List';
+import UsersEditContainer from '../containers/Users/Edit';
 
 import styles from './Router.module.scss';
 
@@ -15,13 +16,14 @@ class Router extends React.Component {
     } else {
       selectedMenuItem = 0; // default
     }
+
     return (
       <div className={styles.wrapper}>
         <header>Chipstacks</header>
         <div className={styles.container}>
           <div className={styles.sidebar}>
             <Link
-              to='/users'
+              to="/users"
               className={cn(
                 styles.menuitem,
                 selectedMenuItem === 0 && styles['menuitem-selected']
@@ -32,9 +34,10 @@ class Router extends React.Component {
           </div>
           <div className={styles.content}>
             <Switch>
-              <Route path='/users' component={UsersListContainer} />
+              <Route path="/users/edit/:id" component={UsersEditContainer} />
+              <Route path="/users" component={UsersListContainer} />
 
-              <Redirect to='/users' />
+              <Redirect to="/users" />
             </Switch>
           </div>
         </div>

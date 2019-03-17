@@ -25,3 +25,20 @@ export const getUserById = async (userId) => {
     throw error;
   }
 };
+
+export const updateUser = async (payload) => {
+  try {
+    let timeStamp = new Date();
+    let userDoc = Firestore.collection('users').doc(payload.id);
+    await userDoc.update({
+      id: payload.id,
+      firstName: payload.firstName,
+      lastName: payload.lastName,
+      email: payload.email,
+      active: payload.active,
+      createdAt: payload.createdAt || timeStamp.getTime()
+    });
+  } catch (error) {
+    throw error;
+  }
+};
