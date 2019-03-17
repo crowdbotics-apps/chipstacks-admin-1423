@@ -4,6 +4,7 @@ import { Link, Switch, Route, Redirect } from 'react-router-dom';
 
 import UsersListContainer from '../containers/Users/List';
 import UsersEditContainer from '../containers/Users/Edit';
+import UsersAddContainer from '../containers/Users/Add';
 
 import styles from './Router.module.scss';
 
@@ -35,6 +36,7 @@ class Router extends React.Component {
           <div className={styles.content}>
             <Switch>
               <Route path='/users/edit/:id' component={UsersEditContainer} />
+              <Route path='/users/add' component={UsersAddContainer} />
               <Route path='/users' component={UsersListContainer} />
 
               <Redirect to='/users' />

@@ -64,3 +64,32 @@ export const updateUser = async (payload) => {
     throw error;
   }
 };
+
+export const addUser = async (payload) => {
+  try {
+    let timeStamp = new Date();
+    await Firestore.collection('users')
+      .add({
+        firstName: payload.firstName,
+        lastName: payload.lastName,
+        email: payload.email,
+        active: payload.active,
+        createdAt: timeStamp.getTime()
+      })
+      .then((docRef) => {
+        Firestore.collection('users')
+          .doc(docRef.id)
+          .set(
+            {
+              id: docRef.id
+            },
+            { merge: true }
+          );
+      })
+      .catch(function(error) {
+        console.error('Error adding document: ', error);
+      });
+  } catch (error) {
+    throw error;
+  }
+};
