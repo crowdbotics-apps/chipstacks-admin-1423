@@ -26,6 +26,28 @@ export const getUserById = async (userId) => {
   }
 };
 
+export const deactivateUser = async (userId) => {
+  try {
+    let userCollection = Firestore.collection('users');
+    await userCollection.doc(userId).update({
+      active: false
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const activateUser = async (userId) => {
+  try {
+    let userCollection = Firestore.collection('users');
+    await userCollection.doc(userId).update({
+      active: true
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const updateUser = async (payload) => {
   try {
     let timeStamp = new Date();
