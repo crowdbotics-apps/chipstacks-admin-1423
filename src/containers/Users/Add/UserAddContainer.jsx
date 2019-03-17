@@ -5,27 +5,21 @@ import Switch from 'react-switch';
 import { AppContext } from 'components';
 import { UsersController } from 'controllers';
 
-import styles from './UserEditContainer.module.scss';
+import styles from './UserAddContainer.module.scss';
 
-class UserEditContainer extends React.Component {
+const emailRegEx =
+  // eslint-disable-next-line max-len
+  /^(([^<>()\\[\]\\.,;:\s@"]+(\.[^<>()\\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+class UserAddContainer extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      userId: props.match.params.id,
-      data: {}
+      data: { firstName: '', lastName: '', email: '', active: true }
     };
 
     this.handleChange = this.handleChange.bind(this);
-  }
-
-  async componentDidMount() {
-    this.context.showLoading();
-    let data = await UsersController.getUserById(this.state.userId);
-
-    await this.setState({ data });
-    console.log(this.state.data);
-    this.context.hideLoading();
   }
 
   infoChanged(key, value) {
@@ -40,7 +34,10 @@ class UserEditContainer extends React.Component {
     this.setState({ data });
   };
 
-  updateClicked = async () => {
+  addClicked = async () => {
+    if (!this.validate()) {
+      return;
+    }
     this.context.showLoading();
     console.log(this.state.data);
     try {
@@ -56,14 +53,31 @@ class UserEditContainer extends React.Component {
     this.props.history.goBack();
   };
 
+  validate = () => {
+    let { firstName, email } = this.state.data;
+    if (!firstName) {
+      alert("First Name can't be empty!");
+      return false;
+    }
+    if (!email) {
+      alert("Email can't be empty!");
+      return false;
+    }
+    if (!emailRegEx.test(email)) {
+      alert('Email is not valid!');
+      return false;
+    }
+    return true;
+  };
+
   render() {
     return (
       <div className={styles.wrapper}>
-        <h1> Edit User </h1>
+        <h1> Add User </h1>
         <div className={styles.container}>
           <div className={styles.inputItem}>
             <div className={styles.inputItemRow}>
-              <span>First Name</span>
+              <span>First Name *</span>
               <input
                 name="firstName"
                 value={this.state.data.firstName}
@@ -79,9 +93,8 @@ class UserEditContainer extends React.Component {
               />
             </div>
             <div className={styles.inputItemRow}>
-              <span>Email</span>
+              <span>Email *</span>
               <input
-                readOnly
                 name="email"
                 value={this.state.data.email}
                 onChange={(e) => this.infoChanged('email', e.target.value)}
@@ -99,8 +112,8 @@ class UserEditContainer extends React.Component {
         </div>
 
         <div className={styles.btnGroup}>
-          <div className={styles.btnSave} onClick={this.updateClicked}>
-            Update
+          <div className={styles.btnSave} onClick={this.addClicked}>
+            Create User
           </div>
           <div className={styles.btnCancel} onClick={this.cancelClicked}>
             Cancel
@@ -111,11 +124,11 @@ class UserEditContainer extends React.Component {
   }
 }
 
-UserEditContainer.contextType = AppContext;
+UserAddContainer.contextType = AppContext;
 
-UserEditContainer.propTypes = {
+UserAddContainer.propTypes = {
   history: PropTypes.object,
   match: PropTypes.object
 };
 
-export default UserEditContainer;
+export default UserAddContainer;
