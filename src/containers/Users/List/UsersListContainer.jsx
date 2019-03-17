@@ -1,29 +1,29 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 
-import { AppContext } from "components";
-import { UsersController } from "controllers";
-import moment from "moment";
-import styles from "./UsersListContainer.module.scss";
+import { AppContext } from 'components';
+import { UsersController } from 'controllers';
+import moment from 'moment';
+import styles from './UsersListContainer.module.scss';
 
 class UsersListContainer extends React.Component {
   constructor(props) {
     super(props);
 
     this.columns = [
-      "No",
-      "First Name",
-      "Last Name",
-      "Email",
-      "Sign Up Date",
-      "Games",
-      "Active",
-      "Actions"
+      'No',
+      'First Name',
+      'Last Name',
+      'Email',
+      'Sign Up Date',
+      'Games',
+      'Active',
+      'Actions'
     ];
 
     this.state = {
       data: [],
-      keyword: ""
+      keyword: ''
     };
   }
 
@@ -36,8 +36,8 @@ class UsersListContainer extends React.Component {
 
     let data = await UsersController.getUsers();
 
-    data = data.filter(user =>
-      (user.firstName + " " + user.lastName)
+    data = data.filter((user) =>
+      (user.firstName + ' ' + user.lastName)
         .toLowerCase()
         .includes(this.state.keyword.toLowerCase())
     );
@@ -49,30 +49,30 @@ class UsersListContainer extends React.Component {
   };
 
   addClicked = () => {
-    this.props.history.push("/users/add");
+    this.props.history.push('/users/add');
   };
 
-  editClicked = userId => () => {
+  editClicked = (userId) => () => {
     this.props.history.push(`/users/edit/${userId}`);
   };
 
-  deactivateClicked = userId => async () => {
-    var res = window.confirm("Do you want to deactivate this user?");
+  deactivateClicked = (userId) => async () => {
+    var res = window.confirm('Do you want to deactivate this user?');
     if (res) {
       await UsersController.deactivateUser(userId);
       await this.reload();
     }
   };
 
-  activateClicked = userId => async () => {
-    var res = window.confirm("Do you want to activate this user?");
+  activateClicked = (userId) => async () => {
+    var res = window.confirm('Do you want to activate this user?');
     if (res) {
       await UsersController.activateUser(userId);
       await this.reload();
     }
   };
 
-  searchInputChanged = e => {
+  searchInputChanged = (e) => {
     this.setState(
       {
         keyword: e.target.value
@@ -85,7 +85,7 @@ class UsersListContainer extends React.Component {
     );
   };
 
-  searchInputKeyPressed = async e => {
+  searchInputKeyPressed = async (e) => {
     if (e.charCode === 13) {
       // enter pressed
       await this.reload();
@@ -115,7 +115,7 @@ class UsersListContainer extends React.Component {
           <table>
             <thead>
               <tr className={styles.header}>
-                {this.columns.map(item => (
+                {this.columns.map((item) => (
                   <th key={item}>{item}</th>
                 ))}
               </tr>
@@ -129,10 +129,10 @@ class UsersListContainer extends React.Component {
                   <td>{item.email}</td>
                   <td>
                     {item.createdAt &&
-                      moment(item.createdAt).format("DD/MM/YYYY")}
+                      moment(item.createdAt).format('DD/MM/YYYY')}
                   </td>
                   <td>{item.games}</td>
-                  <td>{item.active ? "Active" : "Inactive"}</td>
+                  <td>{item.active ? 'Active' : 'Inactive'}</td>
                   <td>
                     <span onClick={this.editClicked(item.id)}>
                       <i
