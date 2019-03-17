@@ -1,115 +1,106 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
-import { AppContext } from 'components';
-// import { UsersController } from "controllers";
-import styles from './UsersListContainer.module.scss';
+import { AppContext } from "components";
+import { UsersController } from "controllers";
+import moment from "moment";
+import styles from "./UsersListContainer.module.scss";
 
 class UsersListContainer extends React.Component {
   constructor(props) {
     super(props);
 
     this.columns = [
-      'No',
-      'Organization',
-      'Status',
-      'Participants',
-      'Participant groups',
-      'Divisions / Locations',
-      'Active Campaigns',
-      'Actions'
+      "No",
+      "First Name",
+      "Last Name",
+      "Email",
+      "Sign Up Date",
+      "Games",
+      "Active",
+      "Actions"
     ];
 
     this.state = {
       data: [],
-      keyword: ''
+      keyword: ""
     };
   }
 
-  //   async componentDidMount() {
-  //     await this.reload();
-  //   }
+  async componentDidMount() {
+    await this.reload();
+  }
 
-  //   reload = async () => {
-  //     this.context.showLoading();
+  reload = async () => {
+    this.context.showLoading();
 
-  //     let data = await ClientController.getClients();
+    let data = await UsersController.getUsers();
 
-  //     data = data
-  //       .filter(client =>
-  //         client.org.toLowerCase().includes(this.state.keyword.toLowerCase())
-  //       )
-  //       .map(client => {
-  //         let item = { ...client };
-  //         let emailSet = new Set();
-  //         client.participant_groups.map(group => {
-  //           for (let participant of group.participant_list) {
-  //             emailSet.add(participant.email);
-  //           }
-  //           return;
-  //         });
-  //         item.participants = Array.from(emailSet);
-  //         return item;
-  //       });
-  //     this.setState({
-  //       data
-  //     });
-  //     this.context.hideLoading();
-  //   };
+    data = data.filter(user =>
+      (user.firstName + " " + user.lastName)
+        .toLowerCase()
+        .includes(this.state.keyword.toLowerCase())
+    );
 
-  //   addClicked = () => {
-  //     this.props.history.push("/clients/add");
-  //   };
+    await this.setState({
+      data
+    });
+    this.context.hideLoading();
+  };
 
-  //   editClicked = clientId => () => {
-  //     this.props.history.push(`/clients/edit/${clientId}`);
-  //   };
+  addClicked = () => {
+    this.props.history.push("/users/add");
+  };
 
-  //   deactivateClicked = clientId => async () => {
-  //     var res = window.confirm("Do you want to deactivate this client?");
-  //     if (res) {
-  //       await ClientController.deactivateClient(clientId);
-  //       await this.reload();
-  //     }
-  //   };
+  editClicked = userId => () => {
+    this.props.history.push(`/users/edit/${userId}`);
+  };
 
-  //   activateClicked = clientId => async () => {
-  //     var res = window.confirm("Do you want to activate this client?");
-  //     if (res) {
-  //       await ClientController.activateClient(clientId);
-  //       await this.reload();
-  //     }
-  //   };
+  deactivateClicked = userId => async () => {
+    var res = window.confirm("Do you want to deactivate this user?");
+    if (res) {
+      await UsersController.deactivateUser(userId);
+      await this.reload();
+    }
+  };
 
-  //   searchInputChanged = e => {
-  //     this.setState(
-  //       {
-  //         keyword: e.target.value
-  //       },
-  //       async () => {
-  //         if (!this.state.keyword) {
-  //           await this.reload();
-  //         }
-  //       }
-  //     );
-  //   };
+  activateClicked = userId => async () => {
+    var res = window.confirm("Do you want to activate this user?");
+    if (res) {
+      await UsersController.activateUser(userId);
+      await this.reload();
+    }
+  };
 
-  //   searchInputKeyPressed = async e => {
-  //     if (e.charCode === 13) {
-  //       // enter pressed
-  //       await this.reload();
-  //     }
-  //   };
+  searchInputChanged = e => {
+    this.setState(
+      {
+        keyword: e.target.value
+      },
+      async () => {
+        if (!this.state.keyword) {
+          await this.reload();
+        }
+      }
+    );
+  };
+
+  searchInputKeyPressed = async e => {
+    if (e.charCode === 13) {
+      // enter pressed
+      await this.reload();
+    }
+  };
 
   render() {
     return (
       <div className={styles.wrapper}>
-        {/* <div className={styles.top}>
+        <div className={styles.top}>
           <div className={styles.searchbar}>
             <i className={`fa fa-search ${styles.iconSearch}`} />
             <input
-              type='text'
-              placeholder='Type organization name here and press enter to get the result...'
+              type="text"
+              placeholder="Type user name here and press enter to get the result..."
               value={this.state.keyword}
               onChange={this.searchInputChanged}
               onKeyPress={this.searchInputKeyPressed}
@@ -133,19 +124,22 @@ class UsersListContainer extends React.Component {
               {this.state.data.map((item, index) => (
                 <tr key={item.id}>
                   <td>{`${index + 1}`}</td>
-                  <td>{item.org}</td>
-                  <td>{item.status ? 'Active' : 'Inactive'}</td>
-                  <td>{item.participants.length}</td>
-                  <td>{item.participant_group_ids.length}</td>
-                  <td>{item.participant_group_ids.length}</td>
-                  <td>{item.campaign}</td>
+                  <td>{item.firstName}</td>
+                  <td>{item.lastName}</td>
+                  <td>{item.email}</td>
+                  <td>
+                    {item.createdAt &&
+                      moment(item.createdAt).format("DD/MM/YYYY")}
+                  </td>
+                  <td>{item.games}</td>
+                  <td>{item.active ? "Active" : "Inactive"}</td>
                   <td>
                     <span onClick={this.editClicked(item.id)}>
                       <i
                         className={`fa fa-pencil-square-o ${styles.iconPencil}`}
                       />
                     </span>
-                    {item.status ? (
+                    {item.active ? (
                       <span onClick={this.deactivateClicked(item.id)}>
                         <i className={`fa fa-trash-o ${styles.iconTrash}`} />
                       </span>
@@ -161,7 +155,7 @@ class UsersListContainer extends React.Component {
           </table>
         ) : (
           <h3>No Search Result</h3>
-        )} */}
+        )}
       </div>
     );
   }
