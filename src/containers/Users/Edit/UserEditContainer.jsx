@@ -65,7 +65,7 @@ class UserEditContainer extends React.Component {
             <div className={styles.inputItemRow}>
               <span>First Name</span>
               <input
-                name="firstName"
+                name='firstName'
                 value={this.state.data.firstName}
                 onChange={(e) => this.infoChanged('firstName', e.target.value)}
               />
@@ -73,7 +73,7 @@ class UserEditContainer extends React.Component {
             <div className={styles.inputItemRow}>
               <span>Last Name</span>
               <input
-                name="lasttName"
+                name='lasttName'
                 value={this.state.data.lastName}
                 onChange={(e) => this.infoChanged('lastName', e.target.value)}
               />
@@ -82,7 +82,7 @@ class UserEditContainer extends React.Component {
               <span>Email</span>
               <input
                 readOnly
-                name="email"
+                name='email'
                 value={this.state.data.email}
                 onChange={(e) => this.infoChanged('email', e.target.value)}
               />
@@ -92,7 +92,7 @@ class UserEditContainer extends React.Component {
               <Switch
                 onChange={this.handleChange}
                 checked={this.state.data.active}
-                id="normal-switch"
+                id='normal-switch'
               />
             </div>
           </div>

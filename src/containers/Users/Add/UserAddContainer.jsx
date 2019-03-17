@@ -41,7 +41,7 @@ class UserAddContainer extends React.Component {
     this.context.showLoading();
     console.log(this.state.data);
     try {
-      await UsersController.updateUser(this.state.data);
+      await UsersController.addUser(this.state.data);
       this.props.history.goBack();
     } catch (error) {
       alert(error.message);

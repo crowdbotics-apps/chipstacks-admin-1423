@@ -24,7 +24,7 @@ class Router extends React.Component {
         <div className={styles.container}>
           <div className={styles.sidebar}>
             <Link
-              to="/users"
+              to='/users'
               className={cn(
                 styles.menuitem,
                 selectedMenuItem === 0 && styles['menuitem-selected']
@@ -35,11 +35,11 @@ class Router extends React.Component {
           </div>
           <div className={styles.content}>
             <Switch>
-              <Route path="/users/edit/:id" component={UsersEditContainer} />
-              <Route path="/users/add" component={UsersAddContainer} />
-              <Route path="/users" component={UsersListContainer} />
+              <Route path='/users/edit/:id' component={UsersEditContainer} />
+              <Route path='/users/add' component={UsersAddContainer} />
+              <Route path='/users' component={UsersListContainer} />
 
-              <Redirect to="/users" />
+              <Redirect to='/users' />
             </Switch>
           </div>
         </div>
