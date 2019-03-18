@@ -73,7 +73,7 @@ export const addUser = async (payload) => {
         firstName: payload.firstName,
         lastName: payload.lastName,
         email: payload.email,
-        active: payload.active,
+        active: payload.active || true,
         createdAt: timeStamp.getTime()
       })
       .then((docRef) => {

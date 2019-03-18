@@ -100,14 +100,14 @@ class UserAddContainer extends React.Component {
                 onChange={(e) => this.infoChanged('email', e.target.value)}
               />
             </div>
-            <div className={styles.inputItemRow}>
+            {/* <div className={styles.inputItemRow}>
               <span>Status</span>
               <Switch
                 onChange={this.handleChange}
                 checked={this.state.data.active}
                 id="normal-switch"
               />
-            </div>
+            </div> */}
           </div>
         </div>
 
