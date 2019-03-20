@@ -15,8 +15,9 @@ class GameAddContainer extends React.Component {
     this.state = {
       data: {
         name: '',
-        buyin: null,
-        rebuy: null,
+        buyin: '',
+        rebuy: '',
+        fee: '',
         active: true
       },
       players: []
@@ -48,7 +49,6 @@ class GameAddContainer extends React.Component {
 
   async handleChange(players) {
     await this.setState({ players });
-    console.log(this.state.players);
   }
 
   infoChanged(key, value) {
@@ -79,9 +79,13 @@ class GameAddContainer extends React.Component {
   };
 
   validate = () => {
-    let { name, buyin, rebuy } = this.state.data;
+    let { name, buyin, rebuy, fee } = this.state.data;
     if (!name) {
       alert("Game Name can't be empty!");
+      return false;
+    }
+    if (this.state.players.length === 0) {
+      alert('Please add players!');
       return false;
     }
     if (buyin <= 0) {
@@ -89,13 +93,14 @@ class GameAddContainer extends React.Component {
       return false;
     }
     if (rebuy <= 0) {
-      alert("Buy In can't be zero!");
+      alert("Rebuy can't be zero!");
       return false;
     }
-    if (this.state.players.length === 0) {
-      alert('Please add players!');
+    if (fee <= 0) {
+      alert("Fee can't be zero!");
       return false;
     }
+
     return true;
   };
 
@@ -123,7 +128,6 @@ class GameAddContainer extends React.Component {
                 selectedItems={players}
                 onChange={this.handleChange}
                 showSelectedItems={true}
-                responsiveHeight={300}
                 wrapperClassName={styles.selector}
               />
             </div>

@@ -68,12 +68,19 @@ export const updateGame = async (payload) => {
 export const addGame = async (payload) => {
   try {
     let timeStamp = new Date();
+
+    // todo - replace after impelement adimn auth
+    // const uid = Auth.currentUser.uid;
+
     await Firestore.collection('games')
       .add({
-        firstName: payload.firstName,
-        lastName: payload.lastName,
-        email: payload.email,
+        buyin: payload.buyin,
+        rebuy: payload.rebuy,
+        fee: payload.fee,
+        name: payload.name,
         active: payload.active || true,
+        admin: 'Jk7kU7qrsTUSEAarli73m0FfkVk2', //todo replace uid
+        players: payload.players,
         createdAt: timeStamp.getTime()
       })
       .then((docRef) => {
