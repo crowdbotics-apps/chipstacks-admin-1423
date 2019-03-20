@@ -53,14 +53,17 @@
       flex-direction: row;
       align-items: center;
       margin-bottom: 20px;
-      span {
+      .fieldName {
         width: 200px;
       }
-      input {
+      .input {
         height: 40px;
-        width: 300px;
+        width: 400px;
         font-size: 16px;
         padding: 0 20px;
+      }
+      .selector {
+        width: 440px;
       }
     }
   }

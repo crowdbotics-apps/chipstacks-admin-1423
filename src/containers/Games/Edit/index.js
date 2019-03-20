@@ -1,1 +1,1 @@
-export { default } from './UserEditContainer';
+export { default } from './GameEditContainer';
