@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { AppContext } from 'components';
-import { GamesController } from 'controllers';
+import { GamesController, UsersController } from 'controllers';
 import moment from 'moment';
 import styles from './GamesListContainer.module.scss';
 

@@ -56,11 +56,11 @@ class UserAddContainer extends React.Component {
   validate = () => {
     let { firstName, email } = this.state.data;
     if (!firstName) {
-      alert("First Name can't be empty!");
+      alert('First Name can\'t be empty!');
       return false;
     }
     if (!email) {
-      alert("Email can't be empty!");
+      alert('Email can\'t be empty!');
       return false;
     }
     if (!emailRegEx.test(email)) {
@@ -79,7 +79,7 @@ class UserAddContainer extends React.Component {
             <div className={styles.inputItemRow}>
               <span>First Name *</span>
               <input
-                name="firstName"
+                name='firstName'
                 value={this.state.data.firstName}
                 onChange={(e) => this.infoChanged('firstName', e.target.value)}
               />
@@ -87,7 +87,7 @@ class UserAddContainer extends React.Component {
             <div className={styles.inputItemRow}>
               <span>Last Name</span>
               <input
-                name="lasttName"
+                name='lasttName'
                 value={this.state.data.lastName}
                 onChange={(e) => this.infoChanged('lastName', e.target.value)}
               />
@@ -95,7 +95,7 @@ class UserAddContainer extends React.Component {
             <div className={styles.inputItemRow}>
               <span>Email *</span>
               <input
-                name="email"
+                name='email'
                 value={this.state.data.email}
                 onChange={(e) => this.infoChanged('email', e.target.value)}
               />

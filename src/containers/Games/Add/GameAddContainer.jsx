@@ -1,25 +1,39 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Switch from 'react-switch';
+import Select from 'react-select';
 
 import { AppContext } from 'components';
-import { GamesController } from 'controllers';
+import { GamesController, UsersController } from 'controllers';
 
 import styles from './GameAddContainer.module.scss';
-
-const emailRegEx =
-  // eslint-disable-next-line max-len
-  /^(([^<>()\\[\]\\.,;:\s@"]+(\.[^<>()\\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
 class GameAddContainer extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      data: { firstName: '', lastName: '', email: '', active: true }
+      data: {
+        name: '',
+        buyIn: null,
+        rebuy: null,
+        active: true,
+        players: []
+      },
+      users: []
     };
+  }
 
-    this.handleChange = this.handleChange.bind(this);
+  async componentDidMount() {
+    let users = [];
+    this.context.showLoading();
+
+    const data = await UsersController.getUsers();
+    data &&
+      data.length !== 0 &&
+      (await data.map((user) => {
+        users.push(user.email);
+      }));
+    await this.setState({ users });
+    this.context.hideLoading();
   }
 
   infoChanged(key, value) {
@@ -27,12 +41,6 @@ class GameAddContainer extends React.Component {
     data[key] = value;
     this.setState({ data });
   }
-
-  handleChange = (value) => {
-    let { data } = this.state;
-    data.active = value;
-    this.setState({ data });
-  };
 
   addClicked = async () => {
     if (!this.validate()) {
@@ -54,17 +62,21 @@ class GameAddContainer extends React.Component {
   };
 
   validate = () => {
-    let { firstName, email } = this.state.data;
-    if (!firstName) {
-      alert("First Name can't be empty!");
+    let { name, buyIn, rebuy, players } = this.state.data;
+    if (!name) {
+      alert("Game Name can't be empty!");
       return false;
     }
-    if (!email) {
-      alert("Email can't be empty!");
+    if (buyIn <= 0) {
+      alert("Buy In can't be zero!");
       return false;
     }
-    if (!emailRegEx.test(email)) {
-      alert('Email is not valid!');
+    if (rebuy <= 0) {
+      alert("Buy In can't be zero!");
+      return false;
+    }
+    if (players.length === 0) {
+      alert('Please add players!');
       return false;
     }
     return true;
@@ -77,43 +89,49 @@ class GameAddContainer extends React.Component {
         <div className={styles.container}>
           <div className={styles.inputItem}>
             <div className={styles.inputItemRow}>
-              <span>First Name *</span>
+              <span className={styles.fieldName}>Game Name *</span>
               <input
-                name="firstName"
-                value={this.state.data.firstName}
-                onChange={(e) => this.infoChanged('firstName', e.target.value)}
+                name="name"
+                value={this.state.data.name}
+                onChange={(e) => this.infoChanged('name', e.target.value)}
               />
             </div>
             <div className={styles.inputItemRow}>
-              <span>Last Name</span>
-              <input
-                name="lasttName"
-                value={this.state.data.lastName}
-                onChange={(e) => this.infoChanged('lastName', e.target.value)}
+              <span className={styles.fieldName}>Players</span>
+              <Select
+                defaultValue={this.state.players}
+                isMulti
+                name="colors"
+                options={this.state.users}
+                className="basic-multi-select"
+                classNamePrefix="select"
+                // styles={customStyles}
               />
             </div>
             <div className={styles.inputItemRow}>
-              <span>Email *</span>
+              <span className={styles.fieldName}>Buy In($) *</span>
               <input
-                name="email"
-                value={this.state.data.email}
-                onChange={(e) => this.infoChanged('email', e.target.value)}
+                name="buyin"
+                type="number"
+                value={this.state.data.buyIn}
+                onChange={(e) => this.infoChanged('buyin', e.target.value)}
               />
             </div>
-            {/* <div className={styles.inputItemRow}>
-              <span>Status</span>
-              <Switch
-                onChange={this.handleChange}
-                checked={this.state.data.active}
-                id="normal-switch"
+            <div className={styles.inputItemRow}>
+              <span className={styles.fieldName}>Rebuy($) *</span>
+              <input
+                name="rebuy"
+                type="number"
+                value={this.state.data.rebuy}
+                onChange={(e) => this.infoChanged('rebuy', e.target.value)}
               />
-            </div> */}
+            </div>
           </div>
         </div>
 
         <div className={styles.btnGroup}>
           <div className={styles.btnSave} onClick={this.addClicked}>
-            Create Game
+            Save
           </div>
           <div className={styles.btnCancel} onClick={this.cancelClicked}>
             Cancel
