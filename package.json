@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@kenshooui/react-multi-select": "^1.0.70",
     "classnames": "^2.2.6",
     "firebase": "^5.8.2",
     "lodash": "^4.17.11",

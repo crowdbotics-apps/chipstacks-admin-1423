@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Select from 'react-select';
+// import Select from 'react-select';
+import MultiSelect from '@kenshooui/react-multi-select';
 
 import { AppContext } from 'components';
 import { GamesController, UsersController } from 'controllers';
 
+import '@kenshooui/react-multi-select/dist/style.css';
 import styles from './GameAddContainer.module.scss';
 class GameAddContainer extends React.Component {
   constructor(props) {
@@ -13,13 +15,14 @@ class GameAddContainer extends React.Component {
     this.state = {
       data: {
         name: '',
-        buyIn: null,
+        buyin: null,
         rebuy: null,
-        active: true,
-        players: []
+        active: true
       },
-      users: []
+      players: []
     };
+
+    this.handleChange = this.handleChange.bind(this);
   }
 
   async componentDidMount() {
@@ -29,11 +32,23 @@ class GameAddContainer extends React.Component {
     const data = await UsersController.getUsers();
     data &&
       data.length !== 0 &&
-      (await data.map((user) => {
-        users.push(user.email);
+      (await data.map((user, index) => {
+        users.push({
+          id: index,
+          email: user.email,
+          userId: user.id,
+          label: `${user.firstName} ${user.lastName}`,
+          disabled: !user.active
+        });
       }));
     await this.setState({ users });
+
     this.context.hideLoading();
+  }
+
+  async handleChange(players) {
+    await this.setState({ players });
+    console.log(this.state.players);
   }
 
   infoChanged(key, value) {
@@ -47,9 +62,11 @@ class GameAddContainer extends React.Component {
       return;
     }
     this.context.showLoading();
-    console.log(this.state.data);
+    let saveData = this.state.data;
+    saveData.players = this.state.players;
+    console.log(saveData);
     try {
-      await GamesController.addGame(this.state.data);
+      await GamesController.addGame(saveData);
       this.props.history.goBack();
     } catch (error) {
       alert(error.message);
@@ -62,12 +79,12 @@ class GameAddContainer extends React.Component {
   };
 
   validate = () => {
-    let { name, buyIn, rebuy, players } = this.state.data;
+    let { name, buyin, rebuy } = this.state.data;
     if (!name) {
       alert("Game Name can't be empty!");
       return false;
     }
-    if (buyIn <= 0) {
+    if (buyin <= 0) {
       alert("Buy In can't be zero!");
       return false;
     }
@@ -75,7 +92,7 @@ class GameAddContainer extends React.Component {
       alert("Buy In can't be zero!");
       return false;
     }
-    if (players.length === 0) {
+    if (this.state.players.length === 0) {
       alert('Please add players!');
       return false;
     }
@@ -83,6 +100,8 @@ class GameAddContainer extends React.Component {
   };
 
   render() {
+    const { users, players } = this.state;
+
     return (
       <div className={styles.wrapper}>
         <h1> Add Game </h1>
@@ -92,28 +111,29 @@ class GameAddContainer extends React.Component {
               <span className={styles.fieldName}>Game Name *</span>
               <input
                 name="name"
+                className={styles.input}
                 value={this.state.data.name}
                 onChange={(e) => this.infoChanged('name', e.target.value)}
               />
             </div>
             <div className={styles.inputItemRow}>
               <span className={styles.fieldName}>Players</span>
-              <Select
-                defaultValue={this.state.players}
-                isMulti
-                name="colors"
-                options={this.state.users}
-                className="basic-multi-select"
-                classNamePrefix="select"
-                // styles={customStyles}
+              <MultiSelect
+                items={users}
+                selectedItems={players}
+                onChange={this.handleChange}
+                showSelectedItems={true}
+                responsiveHeight={300}
+                wrapperClassName={styles.selector}
               />
             </div>
             <div className={styles.inputItemRow}>
               <span className={styles.fieldName}>Buy In($) *</span>
               <input
                 name="buyin"
+                className={styles.input}
                 type="number"
-                value={this.state.data.buyIn}
+                value={this.state.data.buyin}
                 onChange={(e) => this.infoChanged('buyin', e.target.value)}
               />
             </div>
@@ -121,9 +141,20 @@ class GameAddContainer extends React.Component {
               <span className={styles.fieldName}>Rebuy($) *</span>
               <input
                 name="rebuy"
+                className={styles.input}
                 type="number"
                 value={this.state.data.rebuy}
                 onChange={(e) => this.infoChanged('rebuy', e.target.value)}
+              />
+            </div>
+            <div className={styles.inputItemRow}>
+              <span className={styles.fieldName}>Fee($) *</span>
+              <input
+                name="fee"
+                className={styles.input}
+                type="number"
+                value={this.state.data.fee}
+                onChange={(e) => this.infoChanged('fee', e.target.value)}
               />
             </div>
           </div>

@@ -56,21 +56,14 @@
       .fieldName {
         width: 200px;
       }
-      input {
+      .input {
         height: 40px;
-        width: 300px;
+        width: 400px;
         font-size: 16px;
         padding: 0 20px;
       }
-      .basic-multi-select {
-        .select__control {
-          // .select__control {
-          height: 40px;
-          width: 300px;
-          font-size: 16px;
-          padding: 0 20px;
-          // }
-        }
+      .selector {
+        width: 440px;
       }
     }
   }
