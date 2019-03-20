@@ -1,17 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Switch from 'react-switch';
 import MultiSelect from '@kenshooui/react-multi-select';
-
 import { AppContext } from 'components';
 import { GamesController, UsersController } from 'controllers';
 
-import '@kenshooui/react-multi-select/dist/style.css';
-import styles from './GameAddContainer.module.scss';
-class GameAddContainer extends React.Component {
+import styles from './GameEditContainer.module.scss';
+
+class GameEditContainer extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      gameId: props.match.params.id,
       data: {
         name: '',
         buyin: '',
@@ -26,13 +27,17 @@ class GameAddContainer extends React.Component {
   }
 
   async componentDidMount() {
-    let users = [];
     this.context.showLoading();
+    let data = await GamesController.getGameById(this.state.gameId);
 
-    const data = await UsersController.getUsers();
-    data &&
-      data.length !== 0 &&
-      (await data.map((user, index) => {
+    await this.setState({ data });
+    await this.setState({ players: data.players });
+
+    let users = [];
+    const usersData = await UsersController.getUsers();
+    usersData &&
+      usersData.length !== 0 &&
+      (await usersData.map((user, index) => {
         users.push({
           id: index,
           email: user.email,
@@ -41,13 +46,9 @@ class GameAddContainer extends React.Component {
           disabled: !user.active
         });
       }));
+
     await this.setState({ users });
-
     this.context.hideLoading();
-  }
-
-  async handleChange(players) {
-    await this.setState({ players });
   }
 
   infoChanged(key, value) {
@@ -56,16 +57,26 @@ class GameAddContainer extends React.Component {
     this.setState({ data });
   }
 
-  addClicked = async () => {
+  handleActiveChange = (value) => {
+    let { data } = this.state;
+    data.active = value;
+    this.setState({ data });
+  };
+
+  async handleChange(players) {
+    await this.setState({ players });
+  }
+
+  updateClicked = async () => {
     if (!this.validate()) {
       return;
     }
     this.context.showLoading();
-    let saveData = this.state.data;
-    saveData.players = this.state.players;
-    console.log(saveData);
+    let data = this.state.data;
+    data.players = this.state.players;
+    console.log(data);
     try {
-      await GamesController.addGame(saveData);
+      await GamesController.updateGame(data);
       this.props.history.goBack();
     } catch (error) {
       alert(error.message);
@@ -108,7 +119,7 @@ class GameAddContainer extends React.Component {
 
     return (
       <div className={styles.wrapper}>
-        <h1> Add Game </h1>
+        <h1> Edit Game </h1>
         <div className={styles.container}>
           <div className={styles.inputItem}>
             <div className={styles.inputItemRow}>
@@ -160,12 +171,20 @@ class GameAddContainer extends React.Component {
                 onChange={(e) => this.infoChanged('fee', e.target.value)}
               />
             </div>
+            <div className={styles.inputItemRow}>
+              <span className={styles.fieldName}>Status</span>
+              <Switch
+                onChange={this.handleActiveChange}
+                checked={this.state.data.active}
+                id="normal-switch"
+              />
+            </div>
           </div>
         </div>
 
         <div className={styles.btnGroup}>
-          <div className={styles.btnSave} onClick={this.addClicked}>
-            Save
+          <div className={styles.btnSave} onClick={this.updateClicked}>
+            Update
           </div>
           <div className={styles.btnCancel} onClick={this.cancelClicked}>
             Cancel
@@ -176,11 +195,11 @@ class GameAddContainer extends React.Component {
   }
 }
 
-GameAddContainer.contextType = AppContext;
+GameEditContainer.contextType = AppContext;
 
-GameAddContainer.propTypes = {
+GameEditContainer.propTypes = {
   history: PropTypes.object,
   match: PropTypes.object
 };
 
-export default GameAddContainer;
+export default GameEditContainer;

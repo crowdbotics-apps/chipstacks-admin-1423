@@ -54,11 +54,13 @@ export const updateGame = async (payload) => {
     let gameDoc = Firestore.collection('games').doc(payload.id);
     await gameDoc.update({
       id: payload.id,
-      firstName: payload.firstName,
-      lastName: payload.lastName,
-      email: payload.email,
+      buyin: payload.buyin,
+      rebuy: payload.rebuy,
+      fee: payload.fee,
+      players: payload.players,
       active: payload.active,
-      createdAt: payload.createdAt || timeStamp.getTime()
+      createdAt: payload.createdAt,
+      updatedAt: timeStamp.getTime()
     });
   } catch (error) {
     throw error;

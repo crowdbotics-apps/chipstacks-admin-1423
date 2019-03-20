@@ -7,7 +7,7 @@ import UsersEditContainer from '../containers/Users/Edit';
 import UsersAddContainer from '../containers/Users/Add';
 
 import GamesListContainer from '../containers/Games/List';
-
+import GamesEditContainer from '../containers/Games/Edit';
 import GamesAddContainer from '../containers/Games/Add';
 
 import styles from './Router.module.scss';
@@ -28,7 +28,7 @@ class Router extends React.Component {
         <div className={styles.container}>
           <div className={styles.sidebar}>
             <Link
-              to='/users'
+              to="/users"
               className={cn(
                 styles.menuitem,
                 selectedMenuItem === 0 && styles['menuitem-selected']
@@ -37,7 +37,7 @@ class Router extends React.Component {
               Users
             </Link>
             <Link
-              to='/games'
+              to="/games"
               className={cn(
                 styles.menuitem,
                 selectedMenuItem === 0 && styles['menuitem-selected']
@@ -48,15 +48,15 @@ class Router extends React.Component {
           </div>
           <div className={styles.content}>
             <Switch>
-              <Route path='/users/edit/:id' component={UsersEditContainer} />
-              <Route path='/users/add' component={UsersAddContainer} />
-              <Route path='/users' component={UsersListContainer} />
+              <Route path="/users/edit/:id" component={UsersEditContainer} />
+              <Route path="/users/add" component={UsersAddContainer} />
+              <Route path="/users" component={UsersListContainer} />
 
-              <Route path='/games/edit/:id' component={UsersEditContainer} />
-              <Route path='/games/add' component={GamesAddContainer} />
-              <Route path='/games' component={GamesListContainer} />
+              <Route path="/games/edit/:id" component={GamesEditContainer} />
+              <Route path="/games/add" component={GamesAddContainer} />
+              <Route path="/games" component={GamesListContainer} />
 
-              <Redirect to='/users' />
+              <Redirect to="/users" />
             </Switch>
           </div>
         </div>
