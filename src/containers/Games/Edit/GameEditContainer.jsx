@@ -38,7 +38,7 @@ class GameEditContainer extends React.Component {
     usersData &&
       usersData.length !== 0 &&
       (await usersData.map((user, index) => {
-        users.push({
+        return users.push({
           id: index,
           email: user.email,
           userId: user.id,
@@ -74,7 +74,6 @@ class GameEditContainer extends React.Component {
     this.context.showLoading();
     let data = this.state.data;
     data.players = this.state.players;
-    console.log(data);
     try {
       await GamesController.updateGame(data);
       this.props.history.goBack();
@@ -89,7 +88,7 @@ class GameEditContainer extends React.Component {
   };
 
   validate = () => {
-    let { name, buyin, rebuy, fee } = this.state.data;
+    let { name, buyin, rebuy } = this.state.data;
     if (!name) {
       alert("Game Name can't be empty!");
       return false;
@@ -104,10 +103,6 @@ class GameEditContainer extends React.Component {
     }
     if (rebuy <= 0) {
       alert("Rebuy can't be zero!");
-      return false;
-    }
-    if (fee <= 0) {
-      alert("Fee can't be zero!");
       return false;
     }
 
@@ -162,7 +157,7 @@ class GameEditContainer extends React.Component {
               />
             </div>
             <div className={styles.inputItemRow}>
-              <span className={styles.fieldName}>Fee($) *</span>
+              <span className={styles.fieldName}>Fee($) </span>
               <input
                 name="fee"
                 className={styles.input}

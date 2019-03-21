@@ -18,6 +18,8 @@ class Router extends React.Component {
 
     if (window.location.pathname.startsWith('/users')) {
       selectedMenuItem = 0;
+    } else if (window.location.pathname.startsWith('/games')) {
+      selectedMenuItem = 1; // default
     } else {
       selectedMenuItem = 0; // default
     }
@@ -40,7 +42,7 @@ class Router extends React.Component {
               to="/games"
               className={cn(
                 styles.menuitem,
-                selectedMenuItem === 0 && styles['menuitem-selected']
+                selectedMenuItem === 1 && styles['menuitem-selected']
               )}
             >
               Games

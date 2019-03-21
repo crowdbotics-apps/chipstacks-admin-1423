@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { AppContext } from 'components';
 import Pagination from 'react-js-pagination';
-import { GamesController, UsersController } from 'controllers';
+import { GamesController } from 'controllers';
 import moment from 'moment';
 import styles from './GamesListContainer.module.scss';
 
@@ -44,9 +44,7 @@ class GamesListContainer extends React.Component {
     let data = await GamesController.getGames();
 
     data = data.filter((game) =>
-      (game.firstName + ' ' + game.lastName)
-        .toLowerCase()
-        .includes(this.state.keyword.toLowerCase())
+      game.name.toLowerCase().includes(this.state.keyword.toLowerCase())
     );
 
     await this.setState({
@@ -103,6 +101,22 @@ class GamesListContainer extends React.Component {
     }
   };
 
+  sortBy(key) {
+    let { data } = this.state;
+    if (
+      key === 'players' ||
+      key === 'buyin' ||
+      key === 'rebuy' ||
+      key === 'fee'
+    ) {
+      data = _.orderBy(data, key, ['asc']);
+    } else {
+      data = _.orderBy(data, key);
+    }
+
+    this.setState({ data });
+  }
+
   createRow() {
     const { data } = this.state;
     let children = [];
@@ -120,7 +134,7 @@ class GamesListContainer extends React.Component {
             <td>
               {item.createdAt && moment(item.createdAt).format('DD/MM/YYYY')}
             </td>
-            <td>{item.admin}</td>
+            <td>{item.admin.firstName + ' ' + item.admin.lastName}</td>
             <td>{item.players.length}</td>
             <td>
               ${' '}
@@ -161,12 +175,6 @@ class GamesListContainer extends React.Component {
       );
     }
     return children;
-  }
-
-  sortBy(key) {
-    let { data } = this.state;
-    data = _.orderBy(data, key);
-    this.setState({ data });
   }
 
   render() {
