@@ -186,8 +186,8 @@ class GamesListContainer extends React.Component {
           <div className={styles.searchbar}>
             <i className={`fa fa-search ${styles.iconSearch}`} />
             <input
-              type="text"
-              placeholder="Type game name here and press enter to get the result..."
+              type='text'
+              placeholder='Type game name here and press enter to get the result...'
               value={this.state.keyword}
               onChange={this.searchInputChanged}
               onKeyPress={this.searchInputKeyPressed}

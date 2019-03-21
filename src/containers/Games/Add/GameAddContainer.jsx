@@ -79,7 +79,7 @@ class GameAddContainer extends React.Component {
   validate = () => {
     let { name, buyin, rebuy } = this.state.data;
     if (!name) {
-      alert("Game Name can't be empty!");
+      alert('Game Name can\'t be empty!');
       return false;
     }
     if (this.state.players.length === 0) {
@@ -87,11 +87,11 @@ class GameAddContainer extends React.Component {
       return false;
     }
     if (buyin <= 0) {
-      alert("Buy In can't be zero!");
+      alert('Buy In can\'t be zero!');
       return false;
     }
     if (rebuy <= 0) {
-      alert("Rebuy can't be zero!");
+      alert('Rebuy can\'t be zero!');
       return false;
     }
 
@@ -109,7 +109,7 @@ class GameAddContainer extends React.Component {
             <div className={styles.inputItemRow}>
               <span className={styles.fieldName}>Game Name *</span>
               <input
-                name="name"
+                name='name'
                 className={styles.input}
                 value={this.state.data.name}
                 onChange={(e) => this.infoChanged('name', e.target.value)}
@@ -128,9 +128,9 @@ class GameAddContainer extends React.Component {
             <div className={styles.inputItemRow}>
               <span className={styles.fieldName}>Buy In($) *</span>
               <input
-                name="buyin"
+                name='buyin'
                 className={styles.input}
-                type="number"
+                type='number'
                 value={this.state.data.buyin}
                 onChange={(e) => this.infoChanged('buyin', e.target.value)}
               />
@@ -138,9 +138,9 @@ class GameAddContainer extends React.Component {
             <div className={styles.inputItemRow}>
               <span className={styles.fieldName}>Rebuy($) *</span>
               <input
-                name="rebuy"
+                name='rebuy'
                 className={styles.input}
-                type="number"
+                type='number'
                 value={this.state.data.rebuy}
                 onChange={(e) => this.infoChanged('rebuy', e.target.value)}
               />
@@ -148,9 +148,9 @@ class GameAddContainer extends React.Component {
             <div className={styles.inputItemRow}>
               <span className={styles.fieldName}>Fee($) </span>
               <input
-                name="fee"
+                name='fee'
                 className={styles.input}
-                type="number"
+                type='number'
                 value={this.state.data.fee}
                 onChange={(e) => this.infoChanged('fee', e.target.value)}
               />
