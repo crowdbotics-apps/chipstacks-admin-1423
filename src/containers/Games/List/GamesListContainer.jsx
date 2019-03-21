@@ -2,28 +2,35 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { AppContext } from 'components';
-import { GamesController, UsersController } from 'controllers';
+import Pagination from 'react-js-pagination';
+import { GamesController } from 'controllers';
 import moment from 'moment';
 import styles from './GamesListContainer.module.scss';
 
+var _ = require('lodash');
 class GamesListContainer extends React.Component {
   constructor(props) {
     super(props);
 
     this.columns = [
-      'No',
-      'First Name',
-      'Last Name',
-      'Email',
-      'Sign Up Date',
-      'Games',
-      'Active',
-      'Actions'
+      { title: 'No', key: 'no' },
+      { title: 'Game Name', key: 'name' },
+      { title: 'Created Date', key: 'createdAt' },
+      { title: 'Admin', key: 'admin' },
+      { title: 'Players', key: 'players' },
+      { title: 'BuyIn', key: 'buyin' },
+      { title: 'Rebuy', key: 'rebuy' },
+      { title: 'Fee', key: 'fee' },
+      { title: 'Profit/Loss', key: 'profit_loss' },
+      { title: 'Active', key: 'active' },
+      { title: 'Actions', key: '' }
     ];
 
     this.state = {
       data: [],
-      keyword: ''
+      keyword: '',
+      activePage: 1,
+      itemPerPage: 10
     };
   }
 
@@ -37,9 +44,7 @@ class GamesListContainer extends React.Component {
     let data = await GamesController.getGames();
 
     data = data.filter((game) =>
-      (game.firstName + ' ' + game.lastName)
-        .toLowerCase()
-        .includes(this.state.keyword.toLowerCase())
+      game.name.toLowerCase().includes(this.state.keyword.toLowerCase())
     );
 
     await this.setState({
@@ -47,6 +52,10 @@ class GamesListContainer extends React.Component {
     });
     this.context.hideLoading();
   };
+
+  handlePageChange(pageNumber) {
+    this.setState({ activePage: pageNumber });
+  }
 
   addClicked = () => {
     this.props.history.push('/games/add');
@@ -92,7 +101,85 @@ class GamesListContainer extends React.Component {
     }
   };
 
+  sortBy(key) {
+    let { data } = this.state;
+    if (
+      key === 'players' ||
+      key === 'buyin' ||
+      key === 'rebuy' ||
+      key === 'fee'
+    ) {
+      data = _.orderBy(data, key, ['asc']);
+    } else {
+      data = _.orderBy(data, key);
+    }
+
+    this.setState({ data });
+  }
+
+  createRow() {
+    const { data } = this.state;
+    let children = [];
+    for (
+      var i = (this.state.activePage - 1) * this.state.itemPerPage;
+      i < this.state.activePage * this.state.itemPerPage;
+      i++
+    ) {
+      let item = data[i];
+      children.push(
+        _.isEmpty(item) ? null : (
+          <tr key={i}>
+            <td>{i + 1}</td>
+            <td>{item.name}</td>
+            <td>
+              {item.createdAt && moment(item.createdAt).format('DD/MM/YYYY')}
+            </td>
+            <td>{item.admin.firstName + ' ' + item.admin.lastName}</td>
+            <td>{item.players.length}</td>
+            <td>
+              ${' '}
+              {Number(item.buyin)
+                .toFixed(2)
+                .replace(/\d(?=(\d{3})+\.)/g, '$&,')}
+            </td>
+            <td>
+              ${' '}
+              {Number(item.rebuy)
+                .toFixed(2)
+                .replace(/\d(?=(\d{3})+\.)/g, '$&,')}
+            </td>
+            <td>
+              ${' '}
+              {Number(item.fee)
+                .toFixed(2)
+                .replace(/\d(?=(\d{3})+\.)/g, '$&,')}
+            </td>
+            <td>{item.profit_loss}</td>
+            <td>{item.active ? 'Active' : 'Inactive'}</td>
+            <td>
+              <span onClick={this.editClicked(item.id)}>
+                <i className={`fa fa-pencil-square-o ${styles.iconPencil}`} />
+              </span>
+              {item.active ? (
+                <span onClick={this.deactivateClicked(item.id)}>
+                  <i className={`fa fa-trash-o ${styles.iconTrash}`} />
+                </span>
+              ) : (
+                <span onClick={this.activateClicked(item.id)}>
+                  <i className={`fa fa-refresh ${styles.iconRefresh}`} />
+                </span>
+              )}
+            </td>
+          </tr>
+        )
+      );
+    }
+    return children;
+  }
+
   render() {
+    const { data } = this.state;
+
     return (
       <div className={styles.wrapper}>
         <div className={styles.top}>
@@ -111,48 +198,31 @@ class GamesListContainer extends React.Component {
             Add
           </div>
         </div>
-        {this.state.data.length ? (
-          <table>
-            <thead>
-              <tr className={styles.header}>
-                {this.columns.map((item) => (
-                  <th key={item}>{item}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {this.state.data.map((item, index) => (
-                <tr key={item.id}>
-                  <td>{`${index + 1}`}</td>
-                  <td>{item.firstName}</td>
-                  <td>{item.lastName}</td>
-                  <td>{item.email}</td>
-                  <td>
-                    {item.createdAt &&
-                      moment(item.createdAt).format('DD/MM/YYYY')}
-                  </td>
-                  <td>{item.games}</td>
-                  <td>{item.active ? 'Active' : 'Inactive'}</td>
-                  <td>
-                    <span onClick={this.editClicked(item.id)}>
-                      <i
-                        className={`fa fa-pencil-square-o ${styles.iconPencil}`}
-                      />
-                    </span>
-                    {item.active ? (
-                      <span onClick={this.deactivateClicked(item.id)}>
-                        <i className={`fa fa-trash-o ${styles.iconTrash}`} />
-                      </span>
-                    ) : (
-                      <span onClick={this.activateClicked(item.id)}>
-                        <i className={`fa fa-refresh ${styles.iconRefresh}`} />
-                      </span>
-                    )}
-                  </td>
+        {data.length ? (
+          <div>
+            <table>
+              <thead>
+                <tr className={styles.header}>
+                  {this.columns.map((item, index) => (
+                    <th key={item.key} onClick={() => this.sortBy(item.key)}>
+                      {item.title} &#x21C5;
+                    </th>
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>{this.createRow()}</tbody>
+            </table>
+            <div className={styles.bottom}>
+              <Pagination
+                activePage={this.state.activePage}
+                itemsCountPerPage={this.state.itemPerPage}
+                totalItemsCount={data.length}
+                onChange={(pageNumber) => this.handlePageChange(pageNumber)}
+                innerClass={styles.pagination}
+                activeClass={styles.activeItem}
+              />
+            </div>
+          </div>
         ) : (
           <h3>No Search Result</h3>
         )}

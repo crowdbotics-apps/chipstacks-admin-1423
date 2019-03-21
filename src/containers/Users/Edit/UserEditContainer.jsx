@@ -24,7 +24,6 @@ class UserEditContainer extends React.Component {
     let data = await UsersController.getUserById(this.state.userId);
 
     await this.setState({ data });
-    console.log(this.state.data);
     this.context.hideLoading();
   }
 
@@ -42,7 +41,6 @@ class UserEditContainer extends React.Component {
 
   updateClicked = async () => {
     this.context.showLoading();
-    console.log(this.state.data);
     try {
       await UsersController.updateUser(this.state.data);
       this.props.history.goBack();

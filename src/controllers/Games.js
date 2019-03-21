@@ -1,4 +1,5 @@
 import { Firestore } from '../lib/firebase';
+import { UsersController } from '../controllers';
 
 // search games with the criteria
 export const getGames = async () => {
@@ -20,6 +21,8 @@ export const getGameById = async (gameId) => {
   try {
     let snapshot = await gameCollection.doc(gameId).get();
     let game = await snapshot.data();
+    const admin = await UsersController.getUserById(game.admin);
+    game.admin = admin;
     return game;
   } catch (error) {
     throw error;

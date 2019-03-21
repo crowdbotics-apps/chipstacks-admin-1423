@@ -38,7 +38,7 @@ class GameEditContainer extends React.Component {
     usersData &&
       usersData.length !== 0 &&
       (await usersData.map((user, index) => {
-        users.push({
+        return users.push({
           id: index,
           email: user.email,
           userId: user.id,
@@ -74,7 +74,6 @@ class GameEditContainer extends React.Component {
     this.context.showLoading();
     let data = this.state.data;
     data.players = this.state.players;
-    console.log(data);
     try {
       await GamesController.updateGame(data);
       this.props.history.goBack();
@@ -89,9 +88,9 @@ class GameEditContainer extends React.Component {
   };
 
   validate = () => {
-    let { name, buyin, rebuy, fee } = this.state.data;
+    let { name, buyin, rebuy } = this.state.data;
     if (!name) {
-      alert("Game Name can't be empty!");
+      alert('Game Name can\'t be empty!');
       return false;
     }
     if (this.state.players.length === 0) {
@@ -99,15 +98,11 @@ class GameEditContainer extends React.Component {
       return false;
     }
     if (buyin <= 0) {
-      alert("Buy In can't be zero!");
+      alert('Buy In can\'t be zero!');
       return false;
     }
     if (rebuy <= 0) {
-      alert("Rebuy can't be zero!");
-      return false;
-    }
-    if (fee <= 0) {
-      alert("Fee can't be zero!");
+      alert('Rebuy can\'t be zero!');
       return false;
     }
 
@@ -125,7 +120,7 @@ class GameEditContainer extends React.Component {
             <div className={styles.inputItemRow}>
               <span className={styles.fieldName}>Game Name *</span>
               <input
-                name="name"
+                name='name'
                 className={styles.input}
                 value={this.state.data.name}
                 onChange={(e) => this.infoChanged('name', e.target.value)}
@@ -144,9 +139,9 @@ class GameEditContainer extends React.Component {
             <div className={styles.inputItemRow}>
               <span className={styles.fieldName}>Buy In($) *</span>
               <input
-                name="buyin"
+                name='buyin'
                 className={styles.input}
-                type="number"
+                type='number'
                 value={this.state.data.buyin}
                 onChange={(e) => this.infoChanged('buyin', e.target.value)}
               />
@@ -154,19 +149,19 @@ class GameEditContainer extends React.Component {
             <div className={styles.inputItemRow}>
               <span className={styles.fieldName}>Rebuy($) *</span>
               <input
-                name="rebuy"
+                name='rebuy'
                 className={styles.input}
-                type="number"
+                type='number'
                 value={this.state.data.rebuy}
                 onChange={(e) => this.infoChanged('rebuy', e.target.value)}
               />
             </div>
             <div className={styles.inputItemRow}>
-              <span className={styles.fieldName}>Fee($) *</span>
+              <span className={styles.fieldName}>Fee($) </span>
               <input
-                name="fee"
+                name='fee'
                 className={styles.input}
-                type="number"
+                type='number'
                 value={this.state.data.fee}
                 onChange={(e) => this.infoChanged('fee', e.target.value)}
               />
@@ -176,7 +171,7 @@ class GameEditContainer extends React.Component {
               <Switch
                 onChange={this.handleActiveChange}
                 checked={this.state.data.active}
-                id="normal-switch"
+                id='normal-switch'
               />
             </div>
           </div>

@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Switch from 'react-switch';
 
 import { AppContext } from 'components';
 import { UsersController } from 'controllers';
