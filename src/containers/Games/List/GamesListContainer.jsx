@@ -17,7 +17,7 @@ class GamesListContainer extends React.Component {
       { title: 'Game Name', key: 'name' },
       { title: 'Created Date', key: 'createdAt' },
       { title: 'Admin', key: 'admin' },
-      { title: 'Players', key: 'players' },
+      { title: 'Participants', key: 'players' },
       { title: 'BuyIn', key: 'buyin' },
       { title: 'Rebuy', key: 'rebuy' },
       { title: 'Fee', key: 'fee' },
@@ -137,19 +137,19 @@ class GamesListContainer extends React.Component {
             <td>{item.admin.firstName + ' ' + item.admin.lastName}</td>
             <td>{item.players.length}</td>
             <td>
-              ${' '}
+              $
               {Number(item.buyin)
                 .toFixed(2)
                 .replace(/\d(?=(\d{3})+\.)/g, '$&,')}
             </td>
             <td>
-              ${' '}
+              $
               {Number(item.rebuy)
                 .toFixed(2)
                 .replace(/\d(?=(\d{3})+\.)/g, '$&,')}
             </td>
             <td>
-              ${' '}
+              $
               {Number(item.fee)
                 .toFixed(2)
                 .replace(/\d(?=(\d{3})+\.)/g, '$&,')}
@@ -186,8 +186,8 @@ class GamesListContainer extends React.Component {
           <div className={styles.searchbar}>
             <i className={`fa fa-search ${styles.iconSearch}`} />
             <input
-              type='text'
-              placeholder='Type game name here and press enter to get the result...'
+              type="text"
+              placeholder="Type game name here and press enter to get the result..."
               value={this.state.keyword}
               onChange={this.searchInputChanged}
               onKeyPress={this.searchInputKeyPressed}
